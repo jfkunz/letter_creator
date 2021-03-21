@@ -1,0 +1,64 @@
+extends layout
+
+block content
+
+  style
+    include letter_form/style.css
+
+  #container
+    h1 &bull; Send a letter &bull;
+    .underline
+    .icon_wrapper
+      svg.icon(viewbox='0 0 24 24')
+        g
+          path(d='M23,0H1C0.4,0,0,0.4,0,1v22c0,0.6,0.4,1,1,1h22c0.6,0,1-0.4,1-1V1C24,0.4,23.6,0,23,0z M22,22H2V2h20V22z')
+          path(d='M20,4h-5v5h5V4z M19,8h-3V5h3V8z')
+          rect(height='1' width='10' x='4' y='15')
+          rect(height='1' width='10' x='4' y='18')
+          rect(height='1' width='10' x='4' y='12')
+    form#contact_form(action='/letter' method='post')
+      .name
+        label(for='recipient')
+        textarea#recipient_address(name='recipient' placeholder='Recipient' cols='30' rows='5')
+      .sender2
+        label(for='name')
+        input(type='text' placeholder='Surname' name='sender_surname' id='')
+      .sender2
+        label(for='name')
+        input(type='text' placeholder='Name' name='sender_name' id='')
+      .sender1
+        label(for='email')
+        input(type='text' placeholder='Street' name='sender_street' id='')
+      .sender2
+        label(for='name')
+        input(type='text' placeholder='City' name='sender_city' id='')
+      .sender2
+        label(for='name')
+        input(type='text' placeholder='Zip-code' name='sender_zip' id='')
+      .email
+        label(for='email')
+        input#email_input(type='text' placeholder='E-mail address' name='sender_email')
+      .telephone
+        label(for='name')
+        input#telephone_input(type='text' placeholder='Phone number' name='sender_phone')
+      .subject
+        label(for='subject')
+        input(type='text' placeholder='Subject' name='purpose' id='')
+      .subject
+        label(for='opening')
+        input(type='text' placeholder='Dear Mr. X,' name='opening' id='')
+      .message
+        label(for='message')
+        textarea#message_input(name='text' placeholder="I'd like to chat about" cols='30' rows='5')
+      .subject
+        label(for='closing')
+        input(type='text' placeholder='Best regards,' name='closing' id='')
+      .subject
+        label(for='signature')
+        input(type='text' placeholder='J. Kunz' name='signature' id='')
+      .submit
+        input#form_button(type='submit' value='Create Letter')
+
+
+
+  
