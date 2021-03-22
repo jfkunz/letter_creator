@@ -26,28 +26,30 @@ app.set('portHTTPS', portHTTPS);
  * Create HTTP and HTTPS servers.
  */
 
- const privateKey = fs.readFileSync('/etc/letsencrypt/live/letter.jkunz.de/privkey.pem', 'utf8');
- const certificate = fs.readFileSync('/etc/letsencrypt/live/letter.jkunz.de/cert.pem', 'utf8');
- const ca = fs.readFileSync('/etc/letsencrypt/live/letter.jkunz.de/chain.pem', 'utf8');
- 
- const credentials = {
-   key: privateKey,
-   cert: certificate,
-   ca: ca
- };
+try{
+  const privateKey = fs.readFileSync('/etc/letsencrypt/live/letter.jkunz.de/privkey.pem', 'utf8');
+  const certificate = fs.readFileSync('/etc/letsencrypt/live/letter.jkunz.de/cert.pem', 'utf8');
+  const ca = fs.readFileSync('/etc/letsencrypt/live/letter.jkunz.de/chain.pem', 'utf8');
+  
+  const credentials = {
+    key: privateKey,
+    cert: certificate,
+    ca: ca
+  };
+  var serverHTTPS = https.createServer(credentials, app);
 
- 
+  serverHTTPS.listen(portHTTPS, () => {
+    console.log('HTTPS Server running on port 443');
+  });
+}
+catch (e){
+  console.log("Cannot load certificates");
+}
+
+
 var serverHTTP = http.createServer(app);
-var serverHTTPS = https.createServer(credentials, app);
-
-/**
- * Listen on provided http and https port, on all network interfaces.
- */
-
  serverHTTP.listen(portHTTP, () => {
   console.log('HTTP Server running on port 80');
 });
 
-serverHTTPS.listen(portHTTPS, () => {
-  console.log('HTTPS Server running on port 443');
-});
+
