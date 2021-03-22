@@ -8,6 +8,7 @@ var app = require('../app');
 var debug = require('debug')('letter-creator:server');
 var http = require('http');
 var https = require('https');
+var fs = require('fs');
 
 /**
  * Get port from environment and store in Express.
@@ -15,8 +16,8 @@ var https = require('https');
 
 // var port = normalizePort(process.env.PORT || '3000');
 
-portHTTP = '8080';
-portHTTPS = '80';
+portHTTP = '80';
+portHTTPS = '443';
 
 app.set('portHTTP', portHTTP);
 app.set('portHTTPS', portHTTPS);

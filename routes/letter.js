@@ -54,6 +54,8 @@ router.post('/', function(req, res, next) {
       latexCodeLines.push(Mustache.render(line, arguments))
     }
     const latexCode = latexCodeLines.join("\n")
+
+    //console.log(latexCode);
     const pdf = latex(latexCode, options);
 
     // pdf.pipe(output)
