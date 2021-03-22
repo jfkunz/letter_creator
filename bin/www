@@ -7,84 +7,46 @@
 var app = require('../app');
 var debug = require('debug')('letter-creator:server');
 var http = require('http');
+var https = require('https');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+// var port = normalizePort(process.env.PORT || '3000');
+
+portHTTP = '8080';
+portHTTPS = '80';
+
+app.set('portHTTP', portHTTP);
+app.set('portHTTPS', portHTTPS);
 
 /**
- * Create HTTP server.
+ * Create HTTP and HTTPS servers.
  */
 
-var server = http.createServer(app);
+ const privateKey = fs.readFileSync('/etc/letsencrypt/live/letter.jkunz.de/privkey.pem', 'utf8');
+ const certificate = fs.readFileSync('/etc/letsencrypt/live/letter.jkunz.de/cert.pem', 'utf8');
+ const ca = fs.readFileSync('/etc/letsencrypt/live/letter.jkunz.de/chain.pem', 'utf8');
+ 
+ const credentials = {
+   key: privateKey,
+   cert: certificate,
+   ca: ca
+ };
+
+ 
+var serverHTTP = http.createServer(app);
+var serverHTTPS = https.createServer(credentials, app);
 
 /**
- * Listen on provided port, on all network interfaces.
+ * Listen on provided http and https port, on all network interfaces.
  */
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+ serverHTTP.listen(portHTTP, () => {
+  console.log('HTTP Server running on port 80');
+});
 
-/**
- * Normalize a port into a number, string, or false.
- */
-
-function normalizePort(val) {
-  var port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
-
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-
-  return false;
-}
-
-/**
- * Event listener for HTTP server "error" event.
- */
-
-function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
-
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
-
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
-}
-
-/**
- * Event listener for HTTP server "listening" event.
- */
-
-function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
-}
+serverHTTPS.listen(portHTTPS, () => {
+  console.log('HTTPS Server running on port 443');
+});
